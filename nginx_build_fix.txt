@@ -1,0 +1,20 @@
+#
+
+nginx  编译报错 修改源码
+
+
+vim ngx_lua_ipc-master/src/ipc.c +945
+#define COLLECT_PROCESS_PROPERTY(shdata, ipc_process_type, prop, dst_array, found_count)  \
+{                                                                         \
+int i ;                                                                   \
+for(i=0; i < shdata->process_count; i++) {                                \
+  if ((ipc_process_type == IPC_NGX_PROCESS_WORKER && shdata->process_slots[i].ngx_process_type == NGX_PROCESS_WORKER) \
+   || (ipc_process_type == IPC_NGX_PROCESS_ANY)                               \
+   || (shdata->process_slots[i].process_type == ipc_process_type)){           \
+    dst_array[*found_count] = shdata->process_slots[i].prop;                  \
+    (*found_count)++;                                                         \
+  }                                                                           \
+}                                                                             \
+}
+
+732,739  err 替换为  &err
